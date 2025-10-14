@@ -1,11 +1,13 @@
 ## Table of Contents
 
-- [Getting Started & Install](#quick-start-—-section-1-getting-started--install)
-- [Run the Setup Wizard](#quick-start-—-section-2-run-the-setup-wizard)
-- [Create Your CardPlayable Variant](#quick-start-—-section-3-create-your-cardplayable-variant)
-- [Make It Play (Drawing a Card)](#quick-start-—-section-4-make-it-play-drawing-a-card)
-- [Visual Customization & Card Views](#quick-start-—-section-5-visual-customization--card-views)
-- [Next Steps](#quick-start-—-section-6-next-steps)
+- [Getting Started & Install](#quick-start-install)
+- [Run the Setup Wizard](#quick-start-wizard)
+- [Create Your CardPlayable Variant](#quick-start-create-cardplayable)
+- [Make It Play (Drawing a Card)](#quick-start-make-it-play)
+- [Visual Customization & Card Views](#quick-start-visual-customization)
+- [Next Steps](#quick-start-next-steps)
+
+<a id="quick-start-install"></a>
 
 # Quick Start — Section 1: Getting Started & Install
 
@@ -85,6 +87,8 @@ Similar messages appear for:
 
 > **Hover Gizmo (Desktop):** There’s a visual gizmo for the **hover anchor** line (where cards rest while hovered). Place this below or at the bottom edge of the screen to avoid flicker.  
 > **Play Height:** A separate numeric threshold (default **`1.5f`** on `PlayerHand`) used by both mouse and touch to detect a “play” drag.
+
+<a id="quick-start-wizard"></a>
 
 # Quick Start — Section 2: Run the Setup Wizard
 
@@ -250,6 +254,8 @@ This page centralizes learning and support links.
 
 > 🎉 You’re ready to add content. Continue to **Section 3: Create a CardPlayable Variant** to make your first card and see it in-hand.
 
+<a id="quick-start-create-cardplayable"></a>
+
 # Quick Start — Section 3: Create Your CardPlayable Variant
 
 > **Goal:** Understand and lightly customize the card prefab, card data, and visual setup that the Setup Wizard just created for you.
@@ -307,6 +313,8 @@ This makes them discoverable to factories and draw systems.
 ---
 
 **Next:** Section 4 will show how to add cards to the local player’s hand at runtime (auto-draw or via a button), so they bind a `ScriptableCard` and can be played.
+
+<a id="quick-start-make-it-play"></a>
 
 # Quick Start — Section 4: Make It Play (Drawing a Card)
 
@@ -424,6 +432,8 @@ This includes:
 - Setting up your **World View Prefab** (the UI or mesh that renders card visuals)
 - Implementing your own **ICardViewModelFactory** and **ICardViewModel** to define what data a card exposes
 - Using **ICardViewBinder** on the World View Prefab to connect your visual elements to the ViewModel’s data
+
+<a id="quick-start-visual-customization"></a>
 
 # Quick Start — Section 5: Visual Customization & Card Views
 
@@ -597,6 +607,8 @@ Here’s the order of logic they use:
 - Custom ViewModels and capability systems in depth
 - Extending play resolvers
 - Advanced presenter behavior for overlays and hover views
+
+<a id="quick-start-next-steps"></a>
 
 # Quick Start — Section 6: Next Steps & Resources
 
