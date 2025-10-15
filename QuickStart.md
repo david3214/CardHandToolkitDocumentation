@@ -57,6 +57,7 @@ Assets/
    - **Bootstrap Scene:** create/open your initial scene (default name: **`Bootstrap`**)
      - Create Visual Prefabs and ScriptableObjects:
        - `Config/CardPlayable_User.prefab` (variant of `CardPlayable`)
+         - Creates a default `CardBack_User.mat` and assigns it to the prefab
        - `Config/UserWorldViewPrefab.prefab` (variant of `WorldViewPrefab`)
        - `Config/CardSkin_User.asset` (variant of `CardSkin_Default`)
        - `Config/CardVisualFactory_User.asset` (variant of `CardVisualFactory_Default`)
@@ -118,19 +119,19 @@ This page ensures your project has the core ScriptableObjects and layer configur
 ### Steps
 
 1. **Layers**
-   - Select or create two layers in the UI: **Cards** and **PlayAreas** (names are up to you).
-   - If you choose “Create new…”, the Wizard writes them into **Project Settings ▸ Tags and Layers** (first free slot ≥ 8).
+   - Select or create one layer in the UI: **Cards** (name is up to you).
+   - If you choose “Create new…”, the Wizard writes it into **Project Settings ▸ Tags and Layers** (first free slot ≥ 8).
 2. **Libraries**
    - If any ObjectField is empty, click **Create** next to it. The asset is created under `Assets/CardHandToolkit/Config/` or in a location of your choosing.
-3. Click **Next** once all three ObjectFields are assigned and both layer pickers are set to concrete layers (not “Create new…”).
+3. Click **Next** once all three ObjectFields are assigned and Card layer pickers is set to concrete layer (not “Create new…”).
 
 ### Validation rules
 
-- Both layer fields must be non-empty (not “Create new…”).
+- Card layer field must be non-empty (not “Create new…”).
 - All three assets must be assigned (or newly created).
 - If any is missing, a small inline warning appears and **Next** is disabled.
 
-> **Success state:** Three assets exist and referenced in the setup wizard, both layers assigned.
+> **Success state:** Three assets exist and referenced in the setup wizard, Card layer assigned.
 
 ## Page 2 — Bootstrap Scene
 
@@ -267,6 +268,7 @@ After finishing **Page 2 – Bootstrap Scene**, you now have these assets:
 | Asset                         | Purpose                                                                                                                    | Default Location                 |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
 | **GameCard.prefab**           | Variant of `CardPlayable`, used for all cards in-game. Customize its interaction feel or swap its 3D model.                | `Assets/CardHandToolkit/Config/` |
+| **CardBack.mat**              | Material for the back of cards                                                                                             | `Assets/CardHandToolkit/Config/` |
 | **WorldViewPrefab (Variant)** | Runtime display overlay shown on cards (art, text, stats).                                                                 | `Assets/CardHandToolkit/Config/` |
 | **CardSkin_Game.asset**       | Clone of the default global Card Skin. Defines colors, frames, and which prefabs display card visuals.                     | `Assets/CardHandToolkit/Config/` |
 | **CardVisualFactory.asset**   | Clone of the default Visual Factory. Initializes cards at runtime and holds the global Card Skin + Card Prefab references. | `Assets/CardHandToolkit/Config/` |
@@ -441,7 +443,33 @@ This includes:
 
 ---
 
-## 1) The World View Prefab
+## 1) Art & Materials
+
+(Frames & Back)
+Card Art needs to be setup in a specific way to visually appear correctly on the card prefab.
+
+1. **Canvas & Ratio** - Create art at a 5:7 ratio (Recommended size: 1024x1433px). This is the aspect ratio of the card prefab. Larger is fine; keep the ratio so the UVs map cleanly to the 3D Card
+2. **Transparency** - The card art (Assigned on the `ScriptableCard` assets) should have a transparent background (PNG with alpha channel). This allows the card frame to show through around the edges.
+3. **Edge Safety** - Keep important content ≥100 px from every edge to avoid bevel clipping.
+4. **Pivot** - Keep sprite pivot centered (0.5, 0.5). UVs expect 0-1; no offsets needed.
+5. **Front vs Back**:
+   - **Front Frame:** Add/replace in **CardFrameLibrary**. Use **Default** for most games; optional Rarity entries may override.
+   - **Card Art:** Assigned per `ScriptableCard` asset, usually a PNG of the same size as the card, with a transparent background.
+   - **Back:** One **global** back for v1. The Setup Wizard creates **CardBack_User.mat** and assigns it to the `GameCard.prefab` automatically.
+6. **Import Settings** (For all card art front and back):
+   - Texture Type: `Sprite (2D and UI)`
+   - Sprite Mode: `Single`
+   - sRGB (Color Texture): `Checked`
+   - Pixels Per Unit: `100` (or higher for sharper detail)
+   - Filter Mode: `Bilinear` or `Trilinear`
+   - Compression: ASTC 6×6 (mobile) / BC7 (PC/console) or none if you want max quality
+7. Assigning
+   - **Card Art:** Assigned per `ScriptableCard` asset in the **Card Art** field, assigned to cards in runtime when instantiated.
+   - **Card Frame:** Assigned via the `Rarity` field on the `ScriptableCard` (if using rarity-based frames) or default frame from the `CardFrameLibrary`.
+   - **Card Back:** The Wizard pre-assigns **CardBack_User.mat** on the card’s 3D root; you can swap the texture later.
+     - Update the texture in the material to change the back art for all cards.
+
+## 2) The World View Prefab
 
 Your card visuals come from the **World View Prefab** referenced by your Card Skin.  
 This prefab defines how text, icons, and art\* appear directly on the 3D card and hover overlay.  
@@ -469,7 +497,7 @@ This prefab variant was created by the Setup Wizard, and it's default location i
 
 > The default World View created by the Setup Wizard is already linked to everything, so once you have your ViewModel and ViewBinder set up, it should just work.
 
-## 2) The Card ViewModel
+## 3) The Card ViewModel
 
 Implement **ICardViewModel** to define what data a card exposes to the UI.
 
@@ -490,7 +518,7 @@ Your own ViewModel might:
 
 The included **SampleCardVM** shows a minimal example of this pattern.
 
-## 3) The ViewModel Factory
+## 4) The ViewModel Factory
 
 Cards use an **ICardViewModelFactory** to create the appropriate ViewModel for each card type.  
 You can register your own factory to replace the default dummy VM.
@@ -517,7 +545,7 @@ Example of whole factory used in the sample:
 
 > You only need one global factory; it decides which ViewModel to return based on your game’s card types. For now, you can return the same ViewModel type for all cards.
 
-## 4) The Card View Binder
+## 5) The Card View Binder
 
 Each World View prefab needs a component that implements **ICardViewBinder**.
 
@@ -579,7 +607,7 @@ public sealed class SampleCardViewBinder : MonoBehaviour, ICardViewBinder
   }
 ```
 
-## 5) Field Toggles in action
+## 6) Field Toggles in action
 
 Both **CardPresenter** and **HoverPresenter** control which fields are visible.  
 Here’s the order of logic they use:
@@ -593,7 +621,7 @@ Here’s the order of logic they use:
 
 > This system means you rarely need manual “show/hide” code — the Presenter automatically shows relevant data based on your skin and ViewModel.
 
-## 6) Testing your visual bindings
+## 7) Testing your visual bindings
 
 1. Open your **World View Prefab Variant** created by the Wizard.
 2. Verify the base prefab has a component that implements **ICardViewBinder**.
@@ -640,8 +668,8 @@ The sections below link to detailed references and customization guides.
 
 If you have questions, feedback, or want to show what you’ve built:
 
-- **Discord** — join the discussion, **Report an Issue**, or **Contact Support**.
-- **Ask the CHT Assistant (GPT)** — interactive help inside the editor.
+- **Discord** — [link](https://discord.gg/rC7wVukEpu) join the discussion, **Report an Issue**, or **Contact Support**.
+- **Ask the CHT Assistant (GPT)** — Access via link [here](https://chatgpt.com/g/g-68f00e7f8b248191a7dd41a0089b15d7-card-hand-toolkit-assistant-cht-assistant)
 - **Watch the Quick Start Playlist** _(YouTube link TBD)_.
 
 ---
