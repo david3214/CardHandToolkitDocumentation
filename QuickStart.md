@@ -463,7 +463,7 @@ This prefab variant was created by the Setup Wizard, and it's default location i
 
 3. **Field Toggles:**  
    Add a **FieldToggle** component to each element you want to show or hide dynamically.
-   - Built-in types: `Title`, `Name`, `CardNumber`, etc.
+   - Built-in types: `Title`, `Name`, `Description`, etc.
    - Custom: define your own identifiers (for example, `"Ability Title"`).  
      These toggles respond automatically based on your Card Skin and ViewModel data (see below).
 
@@ -530,7 +530,6 @@ Typical serialized fields on the binder:
 
 - Title text
 - Description text
-- Card number
 - Icon images or cost symbols
 
 This keeps the prefab visually driven — no hard-coded updates elsewhere.
@@ -631,20 +630,19 @@ The sections below link to detailed references and customization guides.
 
 ## 2) Where to go next
 
+- **[Concepts Overview](Concepts.md)** — high-level explanations of the toolkit’s systems.
 - **[API Reference](API.md)** — in-depth look at every class, interface, and event.
-- **[Concepts Overview](API.md#concepts)** — high-level explanations of the toolkit’s systems.
 - **[FAQ](FAQ.md)** — answers to common setup or integration questions.
 - **[Changelog](CHANGELOG.md)** — see what’s new in each version.
-- **[License](LICENSE.md)** — terms for use in your commercial or personal projects.
+- **[License](LICENSE)** — terms for use in your commercial or personal projects.
 
 ## 3) Community & Support
 
 If you have questions, feedback, or want to show what you’ve built:
 
-- **Discord** _(optional)_ — join the discussion or get quick setup help.
+- **Discord** — join the discussion, **Report an Issue**, or **Contact Support**.
 - **Ask the CHT Assistant (GPT)** — interactive help inside the editor.
 - **Watch the Quick Start Playlist** _(YouTube link TBD)_.
-- **Report an Issue** or **Contact Support** through the links in the Wizard’s _Samples & Docs_ page.
 
 ---
 
